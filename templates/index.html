@@ -12,6 +12,13 @@
       <p>Hello, {{name}}</p>
       {% endblock %}
     </div>
+    <div>
+      <form action="/download" method="post">
+        <label for="playlist_url">Enter Playlist URL:</label>
+        <input type="text" id="playlist_url" name="playlist_url" required />
+        <button type="submit">Download Playlist</button>
+      </form>
+    </div>
     <script
       type="text/javascript"
       src="{{url_for('static', filename='index.js')}}"
