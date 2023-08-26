@@ -7,15 +7,37 @@
   </head>
   <body>
     <div>
-      {% block content %}
-      <h1>Welcome to the Home Page!</h1>
       <p>Hello, {{name}}</p>
-      {% endblock %}
     </div>
+
+    <main>
+      {% block content %}
+      <h1>Welcome to {{ name }}'s video section</h1>
+      {% endblock %}
+    </main>
     <div>
       <form action="/download" method="post">
         <label for="playlist_url">Enter Playlist URL:</label>
         <input type="text" id="playlist_url" name="playlist_url" required />
+        <div>
+          <input
+            type="radio"
+            id="music_check"
+            name="source_check"
+            value="music"
+            checked
+          />
+          <label for="music">music</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="video_check"
+            name="source_check"
+            value="video"
+          />
+          <label for="video">video</label>
+        </div>
         <button type="submit">Download Playlist</button>
       </form>
     </div>

@@ -9,7 +9,7 @@ views = Blueprint(__name__, "views")
 
 @views.route("/")
 def home():
-    return render_template("index.html", name="Martyna")
+    return render_template("index.html", name="Marti")
 
 
 @views.route('/download', methods=['POST'])
@@ -17,14 +17,25 @@ def download():
     try:
         playlist_url = request.form['playlist_url']
         playlist = Playlist(playlist_url)
+        source_check = request.form['source_check']
         download_folder = 'downloads/'
+
+        playlist_title = playlist.title
+        playlist_length = playlist.length
+
 
         # Create a folder for downloaded videos
         os.makedirs(download_folder, exist_ok=True)
 
         for video in playlist.videos:
-            # video.streams.get_highest_resolution().download(download_folder)
-            video.streams.get_audio_only().download(download_folder)
+            if source_check == "music":
+                video.streams.get_audio_only().download(download_folder)
+                vid_title = video.title
+                thumnail = video.thumbnail_url
+            else:
+                video.streams.get_highest_resolution().download(download_folder)
+                # video.streams.get_by_resolution("720p") #only if done individually
+            # render_template("profile.html", name=vid_title)
 
         # Create a zip file containing the downloaded videos
         zipfile_name = 'downloaded_videos.zip'
@@ -37,20 +48,3 @@ def download():
         return send_file(zipfile_name, as_attachment=True)
     except Exception as e:
         print("Houston we've got a problem: ", e)
-
-
-
-
-#     try:
-# #     playlist_url = request.form['playlist_url']
-#         playlist_url = "https://www.youtube.com/watch?v=dLixMzBw2j8"
-#         print(playlist_url)
-#         ytObject = YouTube(playlist_url)
-#         print(ytObject)
-#         ytVideo = ytObject.streams.get_highest_resolution()
-#         print(ytVideo)
-#         ytVideo.download('downloads/')
-#         print("video downloaded")
-#     except Exception as e:
-#         print("Error:", e)
-#     print("Success!")
