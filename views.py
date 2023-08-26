@@ -23,7 +23,8 @@ def download():
         os.makedirs(download_folder, exist_ok=True)
 
         for video in playlist.videos:
-            video.streams.get_highest_resolution().download(download_folder)
+            # video.streams.get_highest_resolution().download(download_folder)
+            video.streams.get_audio_only().download(download_folder)
 
         # Create a zip file containing the downloaded videos
         zipfile_name = 'downloaded_videos.zip'
@@ -35,8 +36,7 @@ def download():
         # Send the zip file to the user for download
         return send_file(zipfile_name, as_attachment=True)
     except Exception as e:
-        print("Error: ", e)
-    print("Finally")
+        print("Houston we've got a problem: ", e)
 
 
 
