@@ -3,47 +3,78 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
+    <title>WeLoad</title>
+    <link rel="stylesheet" href="../static/style.css" />
   </head>
   <body>
-    <div>
-      <p>Hello, {{name}}</p>
-    </div>
+    <nav>
+      <div class="nav-container">
+        <img id="logo" src="../static/logo.png" alt="logo" />
+        <!-- <h2>WeLoad</h2> -->
+        <h2>{{name}}</h2>
+      </div>
+    </nav>
 
-    <main>
+    <!-- <main>
       {% block content %}
       <h1>Welcome to {{ name }}'s video section</h1>
       {% endblock %}
+    </main> -->
+
+    <main>
+      <div class="main-container">
+        <div class="main-content">
+          <div class="main-header">
+            <h1><span>YT Playlist</span> Downloader</h1>
+          </div>
+          <div class="main-form">
+            <form action="/download" method="post">
+              <div class="form-choice-btns">
+                <button value="music" name="source_check">MUSIC</button>
+                <button value="video" name="source_check">VIDEO</button>
+              </div>
+              <div class="form-url-input">
+                <input
+                  type="text"
+                  placeholder="Video url..."
+                  id="playlist_url"
+                  name="playlist_url"
+                  required
+                />
+                <button type="submit">LOAD</button>
+              </div>
+            </form>
+          </div>
+          <div class="main-playlist-box">
+            <div class="main-playlist-content">
+              <div class="playlist-image"></div>
+              <div class="playlist-section">
+                <div class="playlist-info">
+                  <p>Playlist title: title</p>
+                  <p>Videos count: 24</p>
+                </div>
+                <div class="playlist-download">
+                  <button>DOWNLOAD PLAYLIST</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
-    <div>
-      <form action="/download" method="post">
-        <label for="playlist_url">Enter Playlist URL:</label>
-        <input type="text" id="playlist_url" name="playlist_url" required />
-        <div>
-          <input
-            type="radio"
-            id="music_check"
-            name="source_check"
-            value="music"
-            checked
-          />
-          <label for="music">music</label>
-        </div>
-        <div>
-          <input
-            type="radio"
-            id="video_check"
-            name="source_check"
-            value="video"
-          />
-          <label for="video">video</label>
-        </div>
-        <button type="submit">Download Playlist</button>
-      </form>
-    </div>
+
     <script
       type="text/javascript"
       src="{{url_for('static', filename='index.js')}}"
     ></script>
   </body>
 </html>
+
+<!-- <input
+  type="radio"
+  id="music_check"
+  name="source_check"
+  value="music"
+  checked
+/>
+<label for="music">music</label> -->

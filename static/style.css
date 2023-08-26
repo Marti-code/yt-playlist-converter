@@ -1,0 +1,149 @@
+:root {
+  --accent: #ff0000;
+  --dark-accent: #d30000;
+  --light-gray: #4a4444;
+  --medium-gray: #262525;
+  --dark-gray: #1a1a1a;
+  --white: #fff;
+  --off-white: #dedede;
+  --playlist-box: #303030;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: var(--off-white);
+}
+
+body {
+  background-color: var(--dark-gray);
+}
+
+h1 {
+  font-size: 6rem;
+  margin-bottom: 40px;
+}
+
+p {
+  font-size: 1.2rem;
+  line-height: 1.6rem;
+}
+
+button {
+  border: none;
+  outline: none;
+  padding: 20px 60px;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  background-color: var(--light-gray);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  color: var(--white);
+  background-color: var(--accent);
+}
+
+input {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding-left: 20px;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  background-color: var(--light-gray);
+  text-align: left;
+}
+
+nav {
+  padding: 0 50px;
+  width: 100vw;
+  height: 10vh;
+  display: flex;
+  align-items: center;
+}
+
+.nav-container {
+  display: flex;
+  align-items: end;
+}
+
+#logo {
+  padding: 0 10px;
+  width: 50px;
+}
+
+span {
+  color: var(--accent);
+}
+
+main {
+  width: 100vw;
+  height: 90vh;
+  padding: 0 50px 50px 50px;
+}
+
+.main-container {
+  border-radius: 30px;
+  background-color: var(--medium-gray);
+  height: 100%;
+  padding: 10px 10vw;
+}
+
+.main-header {
+  text-align: center;
+}
+
+.main-form {
+  display: flex;
+  justify-content: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  width: 100%;
+  padding: 0 50px;
+}
+
+.form-choice-btns,
+.form-url-input {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  width: 100%;
+}
+
+.main-playlist-box {
+  margin-top: 25px;
+  border-radius: 15px;
+  height: 100%;
+  width: 100%;
+  padding: 0 50px;
+}
+
+.main-playlist-content {
+  border-radius: 20px;
+  background-color: var(--playlist-box);
+  display: flex;
+  gap: 30px;
+  padding: 20px;
+}
+
+.playlist-image {
+  background-color: #d30000;
+  width: 210px;
+  height: 210px;
+  border-radius: 15px;
+}
+
+.playlist-section {
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
