@@ -38,24 +38,18 @@ def download():
     try:
         global playlist_url
         playlist = Playlist(playlist_url)
-        # source_check = request.form['source_check']
+        source_check = request.form['source_check']
         download_folder = 'downloads/'
 
         # Create a folder for downloaded videos
         os.makedirs(download_folder, exist_ok=True)
 
-        # for video in playlist.videos:
-        #     if source_check == "music":
-        #         video.streams.get_audio_only().download(download_folder)
-        #         vid_title = video.title
-        #         thumnail = video.thumbnail_url
-        #     else:
-        #         video.streams.get_highest_resolution().download(download_folder)
-        #         # video.streams.get_by_resolution("720p") #only if done individually
-        #     # render_template("profile.html", name=vid_title)
-
         for video in playlist.videos:
-            video.streams.get_audio_only().download(download_folder)
+            if source_check == "music":
+                video.streams.get_audio_only().download(download_folder)
+            else:
+                video.streams.get_highest_resolution().download(download_folder)
+                # video.streams.get_by_resolution("720p") #only if done individually
 
         # Create a zip file containing the downloaded videos
         zipfile_name = 'downloaded_videos.zip'
