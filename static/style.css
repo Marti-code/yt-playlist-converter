@@ -18,10 +18,12 @@
 
 body {
   background-color: var(--dark-gray);
+  overflow-x: hidden;
 }
 
 h1 {
-  font-size: 6rem;
+  font-size: 2rem;
+  font-weight: 400;
   margin-bottom: 10px;
 }
 
@@ -33,7 +35,7 @@ p {
 button {
   border: none;
   outline: none;
-  padding: 20px 60px;
+  padding: 20px 40px;
   border-radius: 12px;
   font-size: 1.2rem;
   background-color: var(--light-gray);
@@ -62,7 +64,7 @@ input {
 /* nav */
 
 nav {
-  padding: 0 50px;
+  padding: 0 15px;
   width: 100vw;
   height: 10vh;
   display: flex;
@@ -89,15 +91,13 @@ span {
 
 main {
   width: 100vw;
-  height: 90vh;
-  padding: 0 50px 50px 50px;
+  height: auto;
 }
 
 .main-container {
-  border-radius: 30px;
   background-color: var(--medium-gray);
   height: 100%;
-  padding: 35px 10vw;
+  padding: 20px 5vw;
 }
 
 .main-header {
@@ -106,7 +106,8 @@ main {
 }
 
 .main-header p {
-  font-size: 1.6rem;
+  font-size: 1.3rem;
+  margin: 0 20px;
 }
 
 .main-form {
@@ -120,7 +121,6 @@ main {
   align-items: center;
   gap: 25px;
   width: 100%;
-  padding: 0 50px;
 }
 
 .form-choice-btns,
@@ -131,30 +131,49 @@ main {
   width: 100%;
 }
 
+.form-choice-btns {
+  margin-top: 10px;
+}
+
+.form-url-input {
+  gap: 8px;
+  flex-direction: column;
+}
+
+.form-url-input input {
+  height: 60px;
+}
+
+.form-url-input button {
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .form-choice-btns button {
   padding: 15px 52px;
   font-size: 1rem;
 }
 
 .main-playlist-box {
-  /* margin-top: 25px; */
-  /* border-radius: 15px; */
   height: 100%;
-  /* width: 100%; */
-  /* padding: 0 50px; */
+  border-radius: 20px;
+  padding: 3px;
+  margin: 25px 0 0 0;
 }
 
 .main-playlist-content {
   border-radius: 20px;
   background-color: var(--playlist-box);
   display: flex;
-  gap: 30px;
-  padding: 20px;
+  flex-direction: column;
+  padding: 15px;
 }
 
 .playlist-image {
   background-color: var(--dark-gray);
-  width: 210px;
+  width: auto;
   height: 210px;
   border-radius: 15px;
   background-position: center;
@@ -267,22 +286,26 @@ label[for="video"] {
 .main-playlist-box {
   --border-size: 3px;
   --border-angle: 0turn;
+
   background-image: conic-gradient(
       from var(--border-angle),
       transparent,
       transparent 50%,
       transparent
     ),
-    conic-gradient(from var(--border-angle), transparent 60%, #08f, #f03);
+    conic-gradient(
+      from var(--border-angle),
+      transparent 60%,
+      rgba(255, 0, 0, 0.455),
+      rgb(255, 0, 0)
+    );
   background-size: calc(100% - (var(--border-size) * 2))
       calc(100% - (var(--border-size) * 2)),
     cover;
+
   background-position: center center;
   background-repeat: no-repeat;
-  animation: bg-spin 3s linear infinite;
-  border-radius: 20px;
-  padding: 3px;
-  margin: 25px 47px 0 47px;
+  /* animation: bg-spin 3s linear infinite; */
 }
 
 @keyframes bg-spin {
@@ -300,3 +323,115 @@ label[for="video"] {
 /* .main-playlist-content:hover {
   animation-play-state: paused;
 } */
+
+/* rwd */
+/* rwd */
+/* rwd */
+/* rwd */
+/* rwd */
+/* rwd */
+/* rwd */
+/* rwd */
+/* rwd */
+/* rwd */
+/* rwd */
+/* rwd */
+/* rwd */
+/* rwd */
+/* rwd */
+/* rwd */
+/* rwd */
+/* rwd */
+/* rwd */
+/* rwd */
+/* rwd */
+
+@media only screen and (min-width: 600px) {
+  h1 {
+    font-size: 6rem;
+  }
+
+  nav {
+    padding: 0 50px;
+  }
+
+  .main-header p {
+    font-size: 1.6rem;
+    margin: 0;
+  }
+
+  main {
+    width: 100vw;
+    height: 90vh;
+    padding: 0 50px 50px 50px;
+  }
+
+  .main-container {
+    border-radius: 30px;
+    background-color: var(--medium-gray);
+    height: 100%;
+    padding: 35px 10vw;
+  }
+
+  .main-form form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    width: 100%;
+    padding: 0 50px;
+  }
+
+  .form-choice-btns,
+  .form-url-input {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+    flex-direction: row;
+  }
+
+  .form-url-input input {
+    height: auto;
+  }
+
+  .form-url-input button {
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .main-playlist-box {
+    height: 100%;
+    border-radius: 20px;
+    padding: 3px;
+    margin: 25px 47px 0 47px;
+  }
+
+  .main-playlist-content {
+    border-radius: 20px;
+    background-color: var(--playlist-box);
+    display: flex;
+    gap: 30px;
+    padding: 10px;
+  }
+
+  button {
+    padding: 20px 60px;
+  }
+
+  .playlist-image {
+    background-color: var(--dark-gray);
+    width: 210px;
+    height: 210px;
+    border-radius: 15px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .form-choice-btns {
+    margin-top: 0;
+  }
+}
