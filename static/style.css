@@ -213,7 +213,8 @@ main {
   width: 100%;
   height: 50px;
   text-align: center;
-  background: #00bc9c;
+  background: var(--light-gray);
+  background: linear-gradient(90deg, var(--accent) 0%, var(--light-gray) 70%);
   transition: all 0.2s ease;
   border-radius: 15px;
 }
@@ -266,7 +267,7 @@ label[for="video"] {
 }
 
 #video:checked ~ .switch {
-  background: var(--accent);
+  background: linear-gradient(-90deg, var(--accent) 0%, var(--light-gray) 70%);
 }
 
 #video:checked ~ .switch span {
