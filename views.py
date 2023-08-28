@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, request, jsonify, redirect, send_file, url_for
-from pytube import Playlist, YouTube
+from flask import Blueprint, render_template, render_template_string, request, jsonify, redirect, send_file, url_for
+from pytube import Playlist
 
 import os
 import zipfile
@@ -7,35 +7,55 @@ import zipfile
 
 views = Blueprint(__name__, "views")
 
+playlist_url = ""
+
 @views.route("/")
 def home():
-    return render_template("index.html", name="Marti")
+    return render_template("index.html")
+
+
+@views.route('/load', methods=['POST'])
+def load():
+    try:
+        global playlist_url
+        playlist_url = request.form['playlist_url']
+        playlist = Playlist(playlist_url)
+
+        playlist_title = playlist.title
+        playlist_length = playlist.length
+        playlist_image = playlist.videos[0].thumbnail_url
+
+        # rendered_content = render_template_string("{% block content %}<h1>{{ name }}</h1>{% endblock %}", playlist_name=playlist_title, videos_count = playlist_length)
+        # return rendered_content
+        return [playlist_title, playlist_length, playlist_image]
+    except Exception as e:
+        print("Houston we've got a problem: ", e)
+
 
 
 @views.route('/download', methods=['POST'])
 def download():
     try:
-        playlist_url = request.form['playlist_url']
+        global playlist_url
         playlist = Playlist(playlist_url)
-        source_check = request.form['source_check']
+        # source_check = request.form['source_check']
         download_folder = 'downloads/'
-
-        playlist_title = playlist.title
-        playlist_length = playlist.length
-
 
         # Create a folder for downloaded videos
         os.makedirs(download_folder, exist_ok=True)
 
+        # for video in playlist.videos:
+        #     if source_check == "music":
+        #         video.streams.get_audio_only().download(download_folder)
+        #         vid_title = video.title
+        #         thumnail = video.thumbnail_url
+        #     else:
+        #         video.streams.get_highest_resolution().download(download_folder)
+        #         # video.streams.get_by_resolution("720p") #only if done individually
+        #     # render_template("profile.html", name=vid_title)
+
         for video in playlist.videos:
-            if source_check == "music":
-                video.streams.get_audio_only().download(download_folder)
-                vid_title = video.title
-                thumnail = video.thumbnail_url
-            else:
-                video.streams.get_highest_resolution().download(download_folder)
-                # video.streams.get_by_resolution("720p") #only if done individually
-            # render_template("profile.html", name=vid_title)
+            video.streams.get_audio_only().download(download_folder)
 
         # Create a zip file containing the downloaded videos
         zipfile_name = 'downloaded_videos.zip'
@@ -48,3 +68,8 @@ def download():
         return send_file(zipfile_name, as_attachment=True)
     except Exception as e:
         print("Houston we've got a problem: ", e)
+
+
+
+
+
