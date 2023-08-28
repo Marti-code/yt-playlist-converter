@@ -16,6 +16,10 @@
   color: var(--off-white);
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   background-color: var(--dark-gray);
   overflow-x: hidden;
@@ -91,6 +95,7 @@ span {
 
 main {
   width: 100vw;
+  min-height: 90vh;
   height: auto;
 }
 
@@ -346,9 +351,25 @@ label[for="video"] {
 /* rwd */
 /* rwd */
 
+@media only screen and (min-width: 450px) {
+  .main-container {
+    padding: 25px 8vw;
+  }
+}
+
 @media only screen and (min-width: 600px) {
+  .main-container {
+    padding: 25px 10vw;
+  }
+
   h1 {
-    font-size: 6rem;
+    font-size: 3rem;
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  h1 {
+    font-size: 3.6rem;
   }
 
   nav {
@@ -356,38 +377,26 @@ label[for="video"] {
   }
 
   .main-header p {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     margin: 0;
   }
 
   main {
-    width: 100vw;
     height: 90vh;
     padding: 0 50px 50px 50px;
   }
 
   .main-container {
     border-radius: 30px;
-    background-color: var(--medium-gray);
-    height: 100%;
-    padding: 35px 10vw;
+    padding: 35px 4vw;
   }
 
   .main-form form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 25px;
-    width: 100%;
     padding: 0 50px;
   }
 
   .form-choice-btns,
   .form-url-input {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-    width: 100%;
     flex-direction: row;
   }
 
@@ -397,41 +406,43 @@ label[for="video"] {
 
   .form-url-input button {
     height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 
   .main-playlist-box {
-    height: 100%;
-    border-radius: 20px;
-    padding: 3px;
     margin: 25px 47px 0 47px;
   }
 
   .main-playlist-content {
-    border-radius: 20px;
-    background-color: var(--playlist-box);
-    display: flex;
+    flex-direction: row;
     gap: 30px;
     padding: 10px;
+  }
+
+  .playlist-image {
+    width: 210px;
+  }
+
+  .form-choice-btns {
+    margin-top: 0;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  h1 {
+    font-size: 4.6rem;
+  }
+
+  .main-container {
+    padding: 35px 10vw;
   }
 
   button {
     padding: 20px 60px;
   }
+}
 
-  .playlist-image {
-    background-color: var(--dark-gray);
-    width: 210px;
-    height: 210px;
-    border-radius: 15px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  .form-choice-btns {
-    margin-top: 0;
+@media only screen and (min-width: 1240px) {
+  h1 {
+    font-size: 6rem;
   }
 }
