@@ -221,25 +221,16 @@ main {
 
 .switch span {
   position: absolute;
-  width: 20px;
-  height: 4px;
+  width: 30px;
+  height: 30px;
   top: 50%;
   left: 50%;
-  margin: -2px 0px 0px -4px;
-  background: var(--white);
+  transform: translate(-50%, -50%);
+  background-image: url("./music-icon.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
   display: block;
-  transform: rotate(-45deg);
-  transition: all 0.2s ease;
-}
-
-.switch span:after {
-  content: "";
-  display: block;
-  position: absolute;
-  width: 4px;
-  height: 12px;
-  margin-top: -8px;
-  background: var(--white);
   transition: all 0.2s ease;
 }
 
@@ -249,10 +240,14 @@ input[type="radio"] {
 
 .switch label {
   cursor: pointer;
-  color: rgba(0, 0, 0, 0.2);
+  color: var(--dark-gray);
   width: 80px;
   line-height: 50px;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease-in;
+}
+
+.switch label:hover {
+  color: var(--dark-accent);
 }
 
 label[for="music"] {
@@ -271,15 +266,7 @@ label[for="video"] {
 }
 
 #video:checked ~ .switch span {
-  background: var(--white);
-  margin-left: -8px;
-}
-
-#video:checked ~ .switch span:after {
-  background: var(--white);
-  height: 20px;
-  margin-top: -8px;
-  margin-left: 8px;
+  background-image: url("./video-icon.png");
 }
 
 #music:checked ~ .switch label[for="music"] {
