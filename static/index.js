@@ -14,42 +14,6 @@ let successfulLoad = true;
 
 downloadBtn.disabled = true;
 
-const downloadSuccessBtn = () => {
-  playlistBox.classList.remove("downloading-animation");
-  downloadBtn.innerText = "SUCCESS!";
-  downloadBtn.classList.remove("btn-normal");
-  downloadBtn.classList.add("btn-success");
-};
-
-const resetErrorMessage = () => {
-  downloadBtn.disabled = true;
-  downloadBtn.classList.remove("btn-success");
-  downloadBtn.classList.remove("btn-normal");
-  downloadBtn.classList.add("btn-disabled");
-
-  loadBtn.disabled = true;
-  loadBtn.classList.remove("btn-normal");
-  loadBtn.classList.add("btn-disabled");
-
-  errorMessage.value = "";
-  errorMessageContainer.style.visibility = "hidden";
-
-  playlistBox.classList.add("downloading-animation");
-  downloadBtn.innerText = "DOWNLOAD PLAYLIST";
-};
-
-const showErrorMessage = (errorMess) => {
-  playlistBox.classList.remove("downloading-animation");
-  playlist_url.value = "";
-
-  loadBtn.disabled = false;
-  loadBtn.classList.add("btn-normal");
-  loadBtn.classList.remove("btn-disabled");
-
-  errorMessage.innerText = errorMess;
-  errorMessageContainer.style.visibility = "visible";
-};
-
 const handlePlaylistBox = (action, data) => {
   if (action == "show") {
     document.querySelector(".playlist-info").innerHTML = `
@@ -65,6 +29,66 @@ const handlePlaylistBox = (action, data) => {
   <p>Videos count:</p>
 `;
     document.querySelector(".playlist-image").style.backgroundImage = `none`;
+  }
+};
+
+const resetErrorMessage = () => {
+  disableBtn("download");
+  disableBtn("load");
+
+  errorMessage.value = "";
+  errorMessageContainer.style.visibility = "hidden";
+
+  playlistBox.classList.add("downloading-animation");
+  downloadBtn.innerText = "DOWNLOAD PLAYLIST";
+};
+
+const showErrorMessage = (errorMess) => {
+  playlistBox.classList.remove("downloading-animation");
+  playlist_url.value = "";
+
+  enableBtn("load");
+
+  errorMessage.innerText = errorMess;
+  errorMessageContainer.style.visibility = "visible";
+};
+
+const downloadSuccessBtn = () => {
+  playlistBox.classList.remove("downloading-animation");
+  downloadBtn.innerText = "SUCCESS!";
+  downloadBtn.classList.remove("btn-normal");
+  downloadBtn.classList.add("btn-success");
+};
+
+const disableBtn = (type) => {
+  if (type == "load") {
+    loadBtn.disabled = true;
+    loadBtn.classList.remove("btn-normal");
+    loadBtn.classList.add("btn-disabled");
+  } else if (type == "download") {
+    downloadBtn.disabled = true;
+    downloadBtn.classList.remove("btn-normal");
+    downloadBtn.classList.add("btn-disabled");
+
+    if (downloadBtn.classList.contains("btn-success")) {
+      downloadBtn.classList.remove("btn-success");
+    }
+  }
+};
+
+const enableBtn = (type) => {
+  if (type == "load") {
+    loadBtn.disabled = false;
+    loadBtn.classList.add("btn-normal");
+    loadBtn.classList.remove("btn-disabled");
+  } else if (type == "download") {
+    downloadBtn.disabled = false;
+    downloadBtn.classList.add("btn-normal");
+    downloadBtn.classList.remove("btn-disabled");
+
+    if (downloadBtn.classList.contains("btn-success")) {
+      downloadBtn.classList.remove("btn-success");
+    }
   }
 };
 
@@ -88,13 +112,8 @@ const loadPlaylistInfo = (event) => {
 
       playlistBox.classList.remove("downloading-animation");
 
-      loadBtn.disabled = false;
-      loadBtn.classList.add("btn-normal");
-      loadBtn.classList.remove("btn-disabled");
-
-      downloadBtn.disabled = false;
-      downloadBtn.classList.add("btn-normal");
-      downloadBtn.classList.remove("btn-disabled");
+      enableBtn("load");
+      enableBtn("download");
     })
     .catch((error) => {
       link = playlist_url.value;
@@ -122,14 +141,10 @@ const downloadPlaylistLoader = (event) => {
     return;
   }
 
-  loadBtn.disabled = true;
-  loadBtn.classList.remove("btn-normal");
-  loadBtn.classList.add("btn-disabled");
+  disableBtn("load");
+  disableBtn("download");
 
   playlistBox.classList.add("downloading-animation");
-  downloadBtn.disabled = true;
-  downloadBtn.classList.remove("btn-normal");
-  downloadBtn.classList.add("btn-disabled");
 
   fetch("/download", {
     method: "POST",
@@ -142,10 +157,7 @@ const downloadPlaylistLoader = (event) => {
     }`,
   })
     .then((data) => {
-      loadBtn.disabled = false;
-      loadBtn.classList.add("btn-normal");
-      loadBtn.classList.remove("btn-disabled");
-
+      enableBtn("load");
       downloadSuccessBtn();
     })
     .catch((error) => {
