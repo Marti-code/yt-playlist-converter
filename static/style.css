@@ -37,7 +37,7 @@ p {
   line-height: 1.6rem;
 }
 
-button {
+.btn-normal {
   border: none;
   outline: none;
   padding: 20px 40px;
@@ -50,22 +50,36 @@ button {
   width: 100%;
 }
 
-button:hover {
+.btn-normal:hover {
   color: var(--white);
   background-color: var(--accent);
 }
 
-.success-btn {
+.btn-disabled {
+  border: none;
+  outline: none;
+  padding: 20px 40px;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  background-color: var(--disabled);
+  color: var(--light-gray);
+  cursor: auto;
+  width: 100%;
+}
+
+.btn-success {
   background-color: var(--dark-accent);
+  border: none;
+  outline: none;
+  padding: 20px 40px;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  color: var(--off-white);
+  cursor: auto;
+  width: 100%;
 }
 
-.initial-btn {
-  background-color: var(--light-gray);
-  color: var(--white);
-  cursor: pointer;
-}
-
-#fetch-videos {
+.fetch-videos {
   width: auto;
 }
 
@@ -182,7 +196,7 @@ main {
   height: 60px;
 }
 
-.form-url-input button {
+.fetch-videos {
   height: 30px;
   display: flex;
   justify-content: center;
@@ -437,7 +451,7 @@ label[for="video"] {
     height: auto;
   }
 
-  .form-url-input button {
+  .fetch-videos {
     height: auto;
   }
 
@@ -469,7 +483,7 @@ label[for="video"] {
     padding: 35px 10vw;
   }
 
-  button {
+  .btn-normal {
     padding: 20px 60px;
   }
 
