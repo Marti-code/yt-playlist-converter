@@ -10,6 +10,8 @@ const errorMessageContainer = document.querySelector(
 );
 const errorMessage = document.querySelector("#error-mess");
 
+let successfulLoad = true;
+
 downloadBtn.disabled = true;
 
 const resetErrorMessage = () => {
@@ -32,6 +34,14 @@ const showErrorMessage = (errorMess) => {
   errorMessageContainer.style.visibility = "visible";
 };
 
+const resetPlaylistBox = () => {
+  document.querySelector(".playlist-info").innerHTML = `
+        <p>Playlist title:</p>
+        <p>Videos count:</p>
+      `;
+  document.querySelector(".playlist-image").style.backgroundImage = `none`;
+};
+
 const loadPlaylistInfo = (event) => {
   event.preventDefault();
 
@@ -46,6 +56,8 @@ const loadPlaylistInfo = (event) => {
   })
     .then((response) => response.json())
     .then((data) => {
+      successfulLoad = true;
+
       document.querySelector(".playlist-info").innerHTML = `
         <p>Playlist title: ${data[0]}</p>
         <p>Videos count:  ${data[1]}</p>
@@ -61,6 +73,8 @@ const loadPlaylistInfo = (event) => {
     .catch((error) => {
       link = playlist_url.value;
 
+      successfulLoad = false;
+
       if (link == "") {
         showErrorMessage("Please provide a link");
       } else if (link.length < 72) {
@@ -75,14 +89,6 @@ const loadPlaylistInfo = (event) => {
     });
 };
 
-const resetPlaylistBox = () => {
-  document.querySelector(".playlist-info").innerHTML = `
-        <p>Playlist title:</p>
-        <p>Videos count:</p>
-      `;
-  document.querySelector(".playlist-image").style.backgroundImage = `none`;
-};
-
 loadBtn.addEventListener("click", loadPlaylistInfo);
 
 const downloadPlaylistLoader = (event) => {
@@ -90,6 +96,10 @@ const downloadPlaylistLoader = (event) => {
 
   playlistBox.classList.add("downloading-animation");
   downloadBtn.disabled = true;
+
+  if (successfulLoad == false) {
+    return;
+  }
 
   fetch("/download", {
     method: "POST",
@@ -108,7 +118,7 @@ const downloadPlaylistLoader = (event) => {
       downloadBtn.classList.add("success-btn");
     })
     .catch((error) => {
-      console.error("Error fetching videos:", error);
+      showErrorMessage("Error fetching videos, please try again later");
     });
 };
 
