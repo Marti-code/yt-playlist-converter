@@ -1,12 +1,13 @@
 :root {
   --accent: #ff0000;
-  --dark-accent: #d30000;
+  --dark-accent: #9c2c2c;
   --light-gray: #4a4444;
   --medium-gray: #262525;
   --dark-gray: #1a1a1a;
   --white: #fff;
   --off-white: #dedede;
   --playlist-box: #303030;
+  --disabled: rgb(101, 96, 96);
 }
 
 * {
@@ -43,6 +44,7 @@ button {
   border-radius: 12px;
   font-size: 1.2rem;
   background-color: var(--light-gray);
+  color: var(--white);
   cursor: pointer;
   transition: all 0.3s ease;
   width: 100%;
@@ -51,6 +53,16 @@ button {
 button:hover {
   color: var(--white);
   background-color: var(--accent);
+}
+
+.success-btn {
+  background-color: var(--dark-accent);
+}
+
+.initial-btn {
+  background-color: var(--light-gray);
+  color: var(--white);
+  cursor: pointer;
 }
 
 #fetch-videos {
@@ -112,12 +124,26 @@ main {
 
 .main-header {
   text-align: center;
-  margin-bottom: 35px;
+  margin-bottom: 15px;
 }
 
 .main-header p {
   font-size: 1.3rem;
   margin: 0 20px;
+}
+
+.error-message-container {
+  background-color: var(--dark-accent);
+  border-radius: 5px;
+  border: 1px solid #d14748;
+  text-align: center;
+  height: 30px;
+  margin-top: 10px;
+}
+
+.error-message-container p {
+  color: #d06969;
+  font-size: 1rem;
 }
 
 .main-form {
@@ -216,7 +242,7 @@ main {
   background: var(--light-gray);
   background: linear-gradient(90deg, var(--accent) 0%, var(--light-gray) 70%);
   transition: all 0.2s ease;
-  border-radius: 15px;
+  border-radius: 10px;
 }
 
 .switch span {
@@ -281,7 +307,7 @@ label[for="video"] {
 /* loader */
 /* loader */
 
-.main-playlist-box {
+.downloading-animation {
   --border-size: 3px;
   --border-angle: 0turn;
 
@@ -303,7 +329,7 @@ label[for="video"] {
 
   background-position: center center;
   background-repeat: no-repeat;
-  /* animation: bg-spin 3s linear infinite; */
+  animation: bg-spin 3s linear infinite;
 }
 
 @keyframes bg-spin {
@@ -386,6 +412,14 @@ label[for="video"] {
   .main-container {
     border-radius: 30px;
     padding: 35px 4vw;
+  }
+
+  .error-message-container {
+    margin: 10px 50px 0 50px;
+  }
+
+  .error-message-container p {
+    font-size: 1rem;
   }
 
   .main-form form {
