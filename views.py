@@ -33,17 +33,14 @@ def load():
 @views.route('/download', methods=['POST'])
 def download():
     try:
-        print("started download")
         global playlist_url
         playlist = Playlist(playlist_url)
         source_check = request.form['source_check']
-        # download_folder = 'downloads/'
 
-        desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
+        desktop_path = os.path.join(os.path.expanduser("~"), "Downloads")
 
         # Create a folder for downloaded videos on the desktop
         download_folder = os.path.join(desktop_path, "YouTubeDownloads")
-
 
         # Create a folder for downloaded videos
         os.makedirs(download_folder, exist_ok=True)
@@ -53,9 +50,6 @@ def download():
                 video.streams.get_audio_only().download(download_folder)
             else:
                 video.streams.get_highest_resolution().download(download_folder)
-                # video.streams.get_by_resolution("720p") #only if done individually
-
-        print("creating zip")
 
         # Create a zip file containing the downloaded videos
         zipfile_name = 'downloaded_videos.zip'
@@ -64,48 +58,7 @@ def download():
                 for file in files:
                     zipf.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), download_folder))
 
-        print("preparing to send")
-
         # Send the zip file to the user for download
         return send_file(zipfile_name, as_attachment=True)
     except Exception as e:
         print("Houston we've got a problem: ", e)
-
-
-
-
-
-# @views.route('/download', methods=['POST'])
-# def download():
-#     try:
-#         print("started download")
-#         global playlist_url
-#         playlist = Playlist(playlist_url)
-#         source_check = request.form['source_check']
-#         download_folder = 'downloads/'
-
-#         # Create a folder for downloaded videos
-#         os.makedirs(download_folder, exist_ok=True)
-
-#         for video in playlist.videos:
-#             if source_check == "music":
-#                 video.streams.get_audio_only().download(download_folder)
-#             else:
-#                 video.streams.get_highest_resolution().download(download_folder)
-#                 # video.streams.get_by_resolution("720p") #only if done individually
-
-#         print("creating zip")
-
-#         # Create a zip file containing the downloaded videos
-#         zipfile_name = 'downloaded_videos.zip'
-#         with zipfile.ZipFile(zipfile_name, 'w') as zipf:
-#             for root, _, files in os.walk(download_folder):
-#                 for file in files:
-#                     zipf.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), download_folder))
-
-#         print("preparing to send")
-
-#         # Send the zip file to the user for download
-#         return send_file(zipfile_name, as_attachment=True)
-#     except Exception as e:
-#         print("Houston we've got a problem: ", e)

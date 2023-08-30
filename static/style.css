@@ -483,7 +483,8 @@ label[for="video"] {
     padding: 35px 10vw;
   }
 
-  .btn-normal {
+  .btn-normal,
+  .btn-disabled {
     padding: 20px 60px;
   }
 

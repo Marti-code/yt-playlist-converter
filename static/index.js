@@ -55,7 +55,7 @@ const showErrorMessage = (errorMess) => {
 
 const downloadSuccessBtn = () => {
   playlistBox.classList.remove("downloading-animation");
-  downloadBtn.innerText = "SUCCESS!";
+  downloadBtn.innerText = "DOWNLOADS FOLDER";
   downloadBtn.classList.remove("btn-normal");
   downloadBtn.classList.add("btn-success");
 };
