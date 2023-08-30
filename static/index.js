@@ -14,6 +14,13 @@ let successfulLoad = true;
 
 downloadBtn.disabled = true;
 
+const downloadSuccessBtn = () => {
+  playlistBox.classList.remove("downloading-animation");
+  downloadBtn.innerText = "SUCCESS!";
+  downloadBtn.classList.remove("initial-btn");
+  downloadBtn.classList.add("success-btn");
+};
+
 const resetErrorMessage = () => {
   downloadBtn.classList.remove("success-btn");
   downloadBtn.classList.add("initial-btn");
@@ -34,12 +41,22 @@ const showErrorMessage = (errorMess) => {
   errorMessageContainer.style.visibility = "visible";
 };
 
-const resetPlaylistBox = () => {
-  document.querySelector(".playlist-info").innerHTML = `
-        <p>Playlist title:</p>
-        <p>Videos count:</p>
+const handlePlaylistBox = (action) => {
+  if (action == "show") {
+    document.querySelector(".playlist-info").innerHTML = `
+        <p>Playlist title: ${data[0]}</p>
+        <p>Videos count:  ${data[1]}</p>
       `;
-  document.querySelector(".playlist-image").style.backgroundImage = `none`;
+    document.querySelector(
+      ".playlist-image"
+    ).style.backgroundImage = `url(${data[2]})`;
+  } else if (action == "reset") {
+    document.querySelector(".playlist-info").innerHTML = `
+  <p>Playlist title:</p>
+  <p>Videos count:</p>
+`;
+    document.querySelector(".playlist-image").style.backgroundImage = `none`;
+  }
 };
 
 const loadPlaylistInfo = (event) => {
@@ -58,13 +75,7 @@ const loadPlaylistInfo = (event) => {
     .then((data) => {
       successfulLoad = true;
 
-      document.querySelector(".playlist-info").innerHTML = `
-        <p>Playlist title: ${data[0]}</p>
-        <p>Videos count:  ${data[1]}</p>
-      `;
-      document.querySelector(
-        ".playlist-image"
-      ).style.backgroundImage = `url(${data[2]})`;
+      handlePlaylistBox("show");
 
       playlistBox.classList.remove("downloading-animation");
       loadBtn.disabled = false;
@@ -85,21 +96,19 @@ const loadPlaylistInfo = (event) => {
         );
       }
 
-      resetPlaylistBox();
+      handlePlaylistBox("reset");
     });
 };
-
-loadBtn.addEventListener("click", loadPlaylistInfo);
 
 const downloadPlaylistLoader = (event) => {
   event.preventDefault();
 
-  playlistBox.classList.add("downloading-animation");
-  downloadBtn.disabled = true;
-
   if (successfulLoad == false) {
     return;
   }
+
+  playlistBox.classList.add("downloading-animation");
+  downloadBtn.disabled = true;
 
   fetch("/download", {
     method: "POST",
@@ -112,14 +121,12 @@ const downloadPlaylistLoader = (event) => {
     }`,
   })
     .then((data) => {
-      playlistBox.classList.remove("downloading-animation");
-      downloadBtn.innerText = "SUCCESS!";
-      downloadBtn.classList.remove("initial-btn");
-      downloadBtn.classList.add("success-btn");
+      downloadSuccessBtn();
     })
     .catch((error) => {
       showErrorMessage("Error fetching videos, please try again later");
     });
 };
 
+loadBtn.addEventListener("click", loadPlaylistInfo);
 downloadBtn.addEventListener("click", downloadPlaylistLoader);
