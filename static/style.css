@@ -137,8 +137,10 @@ main {
   border-radius: 5px;
   border: 1px solid #d14748;
   text-align: center;
-  height: 30px;
+  min-height: 30px;
   margin-top: 10px;
+
+  visibility: hidden;
 }
 
 .error-message-container p {
