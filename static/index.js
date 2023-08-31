@@ -17,16 +17,16 @@ downloadBtn.disabled = true;
 const handlePlaylistBox = (action, data) => {
   if (action == "show") {
     document.querySelector(".playlist-info").innerHTML = `
-        <p>Playlist title: ${data[0]}</p>
-        <p>Videos count:  ${data[1]}</p>
+        <p>Playlist title: ${data["playlist_title"]}</p>
+        <p>Total videos:  ${data["playlist_length"]}</p>
       `;
     document.querySelector(
       ".playlist-image"
-    ).style.backgroundImage = `url(${data[2]})`;
+    ).style.backgroundImage = `url(${data["playlist_image"]})`;
   } else if (action == "reset") {
     document.querySelector(".playlist-info").innerHTML = `
   <p>Playlist title:</p>
-  <p>Videos count:</p>
+  <p>Total videos:</p>
 `;
     document.querySelector(".playlist-image").style.backgroundImage = `none`;
   }

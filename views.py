@@ -25,7 +25,11 @@ def load():
         playlist_length = playlist.length
         playlist_image = playlist.videos[0].thumbnail_url
 
-        return [playlist_title, playlist_length, playlist_image]
+        return {
+            'playlist_title': playlist_title,
+            'playlist_length': playlist_length,
+            'playlist_image': playlist_image
+        }
     except Exception as e:
         print("Houston we've got a problem: ", e)
 
