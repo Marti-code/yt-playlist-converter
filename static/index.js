@@ -122,12 +122,12 @@ const loadPlaylistInfo = (event) => {
 
       if (link == "") {
         showErrorMessage("Please provide a link");
-      } else if (link.length < 72) {
-        showErrorMessage("Please provide a valid link");
-      } else {
+      } else if (link.length == 72) {
         showErrorMessage(
           "Playlist cannot be loaded, check if private or try again later"
         );
+      } else {
+        showErrorMessage("Please provide a valid link");
       }
 
       handlePlaylistBox("reset");
