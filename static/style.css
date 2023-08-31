@@ -484,7 +484,8 @@ label[for="video"] {
   }
 
   .btn-normal,
-  .btn-disabled {
+  .btn-disabled,
+  .btn-success {
     padding: 20px 60px;
   }
 
