@@ -1,5 +1,5 @@
 import shutil
-from flask import Blueprint, render_template, request, send_file
+from flask import Blueprint, render_template, request, send_file, send_from_directory
 from pytube import Playlist
 
 import os
@@ -42,10 +42,10 @@ def download():
         playlist = Playlist(playlist_url)
         source_check = request.form['source_check']
 
-        desktop_path = os.path.join(os.path.expanduser("~"), "Downloads")
+        download_path = os.path.join(os.path.expanduser("~"), "Downloads")
 
         # Create a folder for downloaded videos on the desktop
-        download_folder = os.path.join(desktop_path, "YouTubeDownloads")
+        download_folder = os.path.join(download_path, "YouTubeDownloads")
 
         # Create a folder for downloaded videos
         os.makedirs(download_folder, exist_ok=True)
@@ -56,15 +56,13 @@ def download():
             else:
                 video.streams.get_highest_resolution().download(download_folder)
 
+
         # Create a zip file containing the downloaded videos
         zipfile_name = 'downloaded_videos.zip'
         with zipfile.ZipFile(zipfile_name, 'w') as zipf:
             for root, _, files in os.walk(download_folder):
                 for file in files:
                     zipf.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), download_folder))
-
-        # Delete the original folder
-        shutil.rmtree(download_folder)
 
         # Send the zip file to the user for download
         return send_file(zipfile_name, as_attachment=True)

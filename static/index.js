@@ -54,8 +54,13 @@ const showErrorMessage = (errorMess) => {
 };
 
 const downloadSuccessBtn = () => {
-  playlistBox.classList.remove("downloading-animation");
-  downloadBtn.innerText = "DOWNLOADS FOLDER";
+  let type = musicInput.checked == true ? "music" : "video";
+  if (type == "music") {
+    downloadBtn.innerText = "HAPPY LISTENING!";
+  } else {
+    downloadBtn.innerText = "JOYFUL WATCHING!";
+  }
+
   downloadBtn.classList.remove("btn-normal");
   downloadBtn.classList.add("btn-success");
 };
@@ -159,6 +164,8 @@ const downloadPlaylistLoader = (event) => {
     .then((data) => {
       enableBtn("load");
       downloadSuccessBtn();
+
+      playlistBox.classList.remove("downloading-animation");
     })
     .catch((error) => {
       showErrorMessage("Error fetching videos, please try again later");
@@ -167,3 +174,32 @@ const downloadPlaylistLoader = (event) => {
 
 loadBtn.addEventListener("click", loadPlaylistInfo);
 // downloadBtn.addEventListener("click", downloadPlaylistLoader);
+
+const test = () => {
+  if (successfulLoad == false) {
+    return;
+  }
+
+  playlistBox.classList.add("downloading-animation");
+
+  fetch("/download", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Accept: "application/json",
+    },
+    body: `playlist_url=${playlist_url.value}&source_check=${
+      musicInput.checked == true ? "music" : "video"
+    }`,
+  })
+    .then((data) => {
+      downloadSuccessBtn(musicInput.checked);
+
+      playlistBox.classList.remove("downloading-animation");
+    })
+    .catch((error) => {
+      showErrorMessage("Error fetching videos, please try again later");
+    });
+};
+
+downloadBtn.addEventListener("click", test);
