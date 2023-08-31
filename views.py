@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, render_template_string, request, jsonify, redirect, send_file, url_for
+from flask import Blueprint, render_template, request, send_file
 from pytube import Playlist
 
 import os
