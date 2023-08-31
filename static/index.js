@@ -139,43 +139,7 @@ const loadPlaylistInfo = (event) => {
     });
 };
 
-const downloadPlaylistLoader = (event) => {
-  event.preventDefault();
-
-  if (successfulLoad == false) {
-    return;
-  }
-
-  disableBtn("load");
-  disableBtn("download");
-
-  playlistBox.classList.add("downloading-animation");
-
-  fetch("/download", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      Accept: "application/json",
-    },
-    body: `playlist_url=${playlist_url.value}&source_check=${
-      musicInput.checked == true ? "music" : "video"
-    }`,
-  })
-    .then((data) => {
-      enableBtn("load");
-      downloadSuccessBtn();
-
-      playlistBox.classList.remove("downloading-animation");
-    })
-    .catch((error) => {
-      showErrorMessage("Error fetching videos, please try again later");
-    });
-};
-
-loadBtn.addEventListener("click", loadPlaylistInfo);
-// downloadBtn.addEventListener("click", downloadPlaylistLoader);
-
-const test = () => {
+const downloadPlaylistLoader = () => {
   if (successfulLoad == false) {
     return;
   }
@@ -202,4 +166,5 @@ const test = () => {
     });
 };
 
-downloadBtn.addEventListener("click", test);
+loadBtn.addEventListener("click", loadPlaylistInfo);
+downloadBtn.addEventListener("click", downloadPlaylistLoader);
