@@ -1,3 +1,4 @@
+import shutil
 from flask import Blueprint, render_template, request, send_file
 from pytube import Playlist
 
@@ -61,6 +62,9 @@ def download():
             for root, _, files in os.walk(download_folder):
                 for file in files:
                     zipf.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), download_folder))
+
+        # Delete the original folder
+        shutil.rmtree(download_folder)
 
         # Send the zip file to the user for download
         return send_file(zipfile_name, as_attachment=True)

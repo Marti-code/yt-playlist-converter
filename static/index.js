@@ -166,4 +166,4 @@ const downloadPlaylistLoader = (event) => {
 };
 
 loadBtn.addEventListener("click", loadPlaylistInfo);
-downloadBtn.addEventListener("click", downloadPlaylistLoader);
+// downloadBtn.addEventListener("click", downloadPlaylistLoader);
