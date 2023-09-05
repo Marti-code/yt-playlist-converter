@@ -14,6 +14,11 @@ let successfulLoad = true;
 
 downloadBtn.disabled = true;
 
+/**
+ * Handle display or clear the playlist info box
+ * @param {String} action - The action to perform ('show' or 'reset')
+ * @param {JSON} data - the playlist info
+ */
 const handlePlaylistBox = (action, data) => {
   if (action == "show") {
     document.querySelector(".playlist-info").innerHTML = `
@@ -32,6 +37,9 @@ const handlePlaylistBox = (action, data) => {
   }
 };
 
+/**
+ * Clear error message box and reset the download button
+ */
 const resetErrorMessage = () => {
   disableBtn("download");
   disableBtn("load");
@@ -43,6 +51,10 @@ const resetErrorMessage = () => {
   downloadBtn.innerText = "DOWNLOAD PLAYLIST";
 };
 
+/**
+ * Disable the error message box with a specific message
+ * @param {String} errorMess - the error message text
+ */
 const showErrorMessage = (errorMess) => {
   playlistBox.classList.remove("downloading-animation");
   playlist_url.value = "";
@@ -53,6 +65,9 @@ const showErrorMessage = (errorMess) => {
   errorMessageContainer.style.visibility = "visible";
 };
 
+/**
+ * Change the style of the download button upon success
+ */
 const downloadSuccessBtn = () => {
   let type = musicInput.checked == true ? "music" : "video";
   if (type == "music") {
@@ -65,6 +80,10 @@ const downloadSuccessBtn = () => {
   downloadBtn.classList.add("btn-success");
 };
 
+/**
+ * Disable the button for the user to use
+ * @param {String} type - type of the button ('load' or 'download')
+ */
 const disableBtn = (type) => {
   if (type == "load") {
     loadBtn.disabled = true;
@@ -81,6 +100,10 @@ const disableBtn = (type) => {
   }
 };
 
+/**
+ * Enable the button for the user to use
+ * @param {String} type - type of the button ('load' or 'download')
+ */
 const enableBtn = (type) => {
   if (type == "load") {
     loadBtn.disabled = false;
@@ -97,11 +120,15 @@ const enableBtn = (type) => {
   }
 };
 
+/**
+ * Start the loader when loading files
+ */
 const loadPlaylistInfo = (event) => {
   event.preventDefault();
 
   resetErrorMessage();
 
+  // Send a POST request to load the playlist info
   fetch("/load", {
     method: "POST",
     headers: {
@@ -113,6 +140,7 @@ const loadPlaylistInfo = (event) => {
     .then((data) => {
       successfulLoad = true;
 
+      // Display playlist info to the user
       handlePlaylistBox("show", data);
 
       playlistBox.classList.remove("downloading-animation");
@@ -125,6 +153,7 @@ const loadPlaylistInfo = (event) => {
 
       successfulLoad = false;
 
+      // Display a specific error message to the user
       if (link == "") {
         showErrorMessage("Please provide a link");
       } else if (link.length == 72) {
@@ -135,17 +164,23 @@ const loadPlaylistInfo = (event) => {
         showErrorMessage("Please provide a valid link");
       }
 
+      // Clear the playlist info
       handlePlaylistBox("reset");
     });
 };
 
+/**
+ * Start the loader when downloading files
+ */
 const downloadPlaylistLoader = () => {
+  // Check if the playlist load was successful
   if (successfulLoad == false) {
     return;
   }
 
   playlistBox.classList.add("downloading-animation");
 
+  // Send a POST request to download the playlist
   fetch("/download", {
     method: "POST",
     headers: {
