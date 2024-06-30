@@ -134,9 +134,14 @@ const loadPlaylistInfo = (event) => {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: `playlist_url=${playlist_url.value}`,
+    body: `playlist_url=${encodeURIComponent(playlist_url.value)}`,
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok " + response.statusText);
+      }
+      return response.json();
+    })
     .then((data) => {
       successfulLoad = true;
 
@@ -149,6 +154,7 @@ const loadPlaylistInfo = (event) => {
       enableBtn("download");
     })
     .catch((error) => {
+      console.error("Fetch error:", error.message); // Log the error
       link = playlist_url.value;
 
       successfulLoad = false;
