@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, send_file, jsonify
+from googleapiclient.discovery import build
 import yt_dlp
 import os
 import zipfile
@@ -6,107 +7,78 @@ import traceback
 
 views = Blueprint(__name__, "views")
 
+YOUTUBE_API_KEY = os.getenv("YT_API_KEY")
+
 playlist_url = ""
-
-"""
-    This module defines the routes for a YouTube playlist downloader web application.
-    It includes routes for rendering the home page, loading playlist information, and initiating downloads.
-
-    Routes:
-        - /: Home page route.
-        - /load: Route for loading playlist information.
-        - /download: Route for initiating playlist downloads.
-"""
-
 
 @views.route("/")
 def home():
-    """
-        Render the home page.
-
-        Returns:
-            str: The HTML content of the home page.
-    """
     return render_template("index.html")
 
-
-"""
-    After user clicked Load button, get the playlist url
-    and return playlist title, lenght, image 
-"""
 @views.route('/load', methods=['POST'])
 def load():
-    """
-        Load playlist information from the provided URL.
-
-        Returns:
-            dict: A dictionary containing playlist title, length, and image URL.
-    """
     try:
         global playlist_url
         playlist_url = request.form['playlist_url']
+        playlist_id = playlist_url.split('list=')[-1].split('&')[0] # playlist id without the &feature=shared from the end
 
-        ydl_opts = {
-            'quiet': True,
-            'extract_flat': True,
-        }
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info_dict = ydl.extract_info(playlist_url, download=False)
-            playlist_title = info_dict.get('title', None)
-            playlist_length = len(info_dict.get('entries', []))
-            playlist_image = info_dict.get('thumbnails', [{}])[0].get('url', '')
+        playlist_info = get_playlist_info(YOUTUBE_API_KEY, playlist_id)
 
-        return jsonify({
-            'playlist_title': playlist_title,
-            'playlist_length': playlist_length,
-            'playlist_image': playlist_image
-        })
+        if playlist_info:
+            return jsonify({
+                'playlist_title': playlist_info['title'],
+                'playlist_length': len(playlist_info['video_ids']),
+                'playlist_image': playlist_info['image']
+            })
+        else:
+            return jsonify({'error': 'Failed to load playlist'}), 500
+
     except Exception as e:
         print("An error occurred while loading playlist: ", traceback.format_exc())
         return jsonify({'error': 'Failed to load playlist', 'details': traceback.format_exc()}), 500
 
-
-"""
-    After user clicked Download button, get the playlist url,
-    create path to the downloads folder,
-    create a folder inside of it,
-    download the video or music depending on the users choice,
-    create a zip file containing the downloaded videos,
-    send the zip file to the user for download
-"""
 @views.route('/download', methods=['POST'])
 def download():
-    """
-        Initiate the download of videos or music from the provided URL.
-
-        Returns:
-            file: A zip file containing the downloaded videos or music.
-    """
     try:
+        # playlist_url = request.form['playlist_url']
         global playlist_url
-        print(f"Using playlist URL: {playlist_url}")
-
         source_check = request.form['source_check']
-        print(f"Source check value: {source_check}")
+        # playlist_url = "https://youtube.com/playlist?list=PLc9lfUMDaofEE4RBWnhHO0HHnuimcpSiw&feature=shared"
+        playlist_id = extract_playlist_id(playlist_url)
+
+        playlist_info = get_playlist_info(YOUTUBE_API_KEY, playlist_id)
+        if not playlist_info:
+            return jsonify({'error': 'Failed to load playlist'}), 500
+        
 
         download_path = os.path.join(os.path.expanduser("~"), "Downloads")
-        print(f"Download path: {download_path}")
-
         download_folder = os.path.join(download_path, "YouTubeDownloads")
         os.makedirs(download_folder, exist_ok=True)
-        print(f"Download folder created at: {download_folder}")
 
         ydl_opts = {
             'format': 'bestaudio/best' if source_check == "music" else 'best',
             'outtmpl': os.path.join(download_folder, '%(title)s.%(ext)s'),
             'quiet': True,
-            'no-part': True,  # Prevent creation of .part files
-            'retries': 10,  # Increase the number of retries
-            'sleep_interval': 5,  # Add sleep interval between retries
+            'no-part': True,
         }
 
+        video_urls = [f"https://www.youtube.com/watch?v={video_id}" for video_id in playlist_info['video_ids']]
+
+        successful_downloads = []
+        failed_downloads = []
+
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([playlist_url])
+            for video_url in video_urls:
+                try:
+                    ydl.download([video_url])
+                    successful_downloads.append(video_url)
+                    print(f"Successfully downloaded: {video_url}")
+                except Exception as e:
+                    failed_downloads.append(video_url)
+                    print(f"Failed to download {video_url}: {e}")
+
+        print(f"Successful downloads: {successful_downloads}")
+        print(f"Failed downloads: {failed_downloads}")
 
         zipfile_name = os.path.join(download_folder, 'downloaded_videos.zip')
         with zipfile.ZipFile(zipfile_name, 'w') as zipf:
@@ -114,10 +86,51 @@ def download():
                 for file in files:
                     if file != 'downloaded_videos.zip':
                         zipf.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), download_folder))
-        print(f"ZIP file created: {zipfile_name}")
 
         return send_file(zipfile_name, as_attachment=True)
     except Exception as e:
         error_details = traceback.format_exc()
         print("An error occurred while downloading: ", error_details)
         return jsonify({'error': 'Failed to download playlist', 'details': error_details}), 500
+
+def extract_playlist_id(url):
+    """
+    Extract the playlist ID from a YouTube URL.
+    """
+    if 'list=' in url:
+        return url.split('list=')[-1].split('&')[0]
+    return None
+
+
+def get_playlist_info(api_key, playlist_id):
+    youtube = build('youtube', 'v3', developerKey=api_key)
+    
+    playlist_request = youtube.playlists().list(
+        part="snippet",
+        id=playlist_id
+    )
+    playlist_response = playlist_request.execute()
+    
+    playlist_items_request = youtube.playlistItems().list(
+        part="snippet",
+        playlistId=playlist_id,
+        maxResults=50  # Adjust as needed
+    )
+    playlist_items_response = playlist_items_request.execute()
+    
+    if 'items' in playlist_response and len(playlist_response['items']) > 0:
+        playlist_info = playlist_response['items'][0]['snippet']
+        playlist_title = playlist_info['title']
+        playlist_thumbnails = playlist_info['thumbnails']
+        playlist_image = playlist_thumbnails['default']['url'] if 'default' in playlist_thumbnails else ''
+        
+        video_ids = []
+        for item in playlist_items_response['items']:
+            video_ids.append(item['snippet']['resourceId']['videoId'])
+        
+        return {
+            'title': playlist_title,
+            'image': playlist_image,
+            'video_ids': video_ids
+        }
+    return None
