@@ -114,7 +114,7 @@ def get_playlist_info(api_key, playlist_id):
     playlist_items_request = youtube.playlistItems().list(
         part="snippet",
         playlistId=playlist_id,
-        maxResults=50  # Adjust as needed
+        maxResults=100  # Adjust as needed
     )
     playlist_items_response = playlist_items_request.execute()
     
@@ -122,7 +122,16 @@ def get_playlist_info(api_key, playlist_id):
         playlist_info = playlist_response['items'][0]['snippet']
         playlist_title = playlist_info['title']
         playlist_thumbnails = playlist_info['thumbnails']
-        playlist_image = playlist_thumbnails['default']['url'] if 'default' in playlist_thumbnails else ''
+
+        if 'high' in playlist_thumbnails:
+            playlist_image = playlist_thumbnails['high']['url']
+        elif 'medium' in playlist_thumbnails:
+            playlist_image = playlist_thumbnails['medium']['url']
+        elif 'default' in playlist_thumbnails:
+            playlist_image = playlist_thumbnails['default']['url']
+        else:
+            playlist_image = ''
+        
         
         video_ids = []
         for item in playlist_items_response['items']:
